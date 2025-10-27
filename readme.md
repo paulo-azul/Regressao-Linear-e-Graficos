@@ -1,6 +1,6 @@
 # Calculadora de Regressão Linear (MMQ) com Gnuplot
 
-Este projeto foi desenvolvido por **Paulo Teles Serra Azul**, estudante de Engenharia de Computação da UFBA, como uma ferramenta de apoio para a matéria de Física Experimental (Fís Exp).
+Este projeto foi desenvolvido por **Paulo Teles Serra Azul**, estudante de Engenharia de Computação da UFBA, como uma ferramenta de apoio para a matéria de Física Experimental (FISD41).
 
 Objetivo do programa é receber um conjunto de dados (X, Y) e realizar uma análise completa de regressão linear, incluindo: 
 
