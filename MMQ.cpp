@@ -4,6 +4,8 @@
 #include <utility>
 #include <algorithm>
 #include "gnuplot-iostream.h"
+#include <cstdlib> 
+#include <string>  
 using namespace std;
 using namespace gnuplotio;
 
@@ -33,6 +35,17 @@ void plotar_graficos(vector<pair<double, double>> reta, vector<double> x, vector
     gp.send1d(reta);
 
     gp << "pause mouse close\n";
+}
+
+//checagem dos dados para calcular log e ln
+
+double checar_log(double valor, int indice, string nome_var) {
+    if (valor <= 0) {
+        cerr << "\nERRO: Impossível calcular log de " << nome_var << " <= 0." << endl;
+        cerr << "Verifique seu dado no índice " << indice << " (valor: " << valor << ")" << endl;
+        exit(1); 
+    }
+    return valor;
 }
 
 
@@ -69,7 +82,7 @@ int main(){
         y.push_back(entrada);
     }
 
-    //função aninhada para decidir as variáveis do eixo X e Y na hora de plotar o gráfico
+    //função aninhada para decidir as variáveis do eixo X e Y na hora de calcular a regressão e plotar o gráfico
 
     auto gerar_variavel = [&](int tipo) -> vector<double> {
         vector<double> v;
@@ -81,19 +94,84 @@ int main(){
                 case 3: v.push_back(y[i]); break;
                 case 4: v.push_back(y[i] * y[i]); break;
                 case 5: v.push_back(x[i] * y[i]); break;
+                case 6: v.push_back(log( checar_log(x[i], i, "x") )); break;
+                case 7: v.push_back(log( checar_log(x[i] * x[i], i, "x²") )); break;
+                case 8: v.push_back(log( checar_log(y[i], i, "y") )); break;
+                case 9: v.push_back(log( checar_log(y[i] * y[i], i, "y²") )); break;
+                case 10: v.push_back(log( checar_log(x[i]*y[i], i, "x*y") )); break;
+                case 11: v.push_back(log10( checar_log(x[i], i, "x") )); break;
+                case 12: v.push_back(log10( checar_log(x[i] * x[i], i, "x²") )); break;
+                case 13: v.push_back(log10( checar_log(y[i], i, "y") )); break;
+                case 14: v.push_back(log10( checar_log(y[i] * y[i], i, "y²") )); break;
+                case 15: v.push_back(log10( checar_log(x[i]*y[i], i, "x*y") )); break;
             }
         }
         return v;
     };
 
+    //Escolha a variável para regressão
+
+    cout << endl << "Escolha a variável para regressão no eixo X:\n";
+    cout << "1 - X\n";
+    cout << "2 - X²\n";
+    cout << "3 - Y\n";
+    cout << "4 - Y²\n";
+    cout << "5 - XY\n";
+    cout << "6 - ln(x)\n";
+    cout << "7 - ln(x²)\n";
+    cout << "8 - ln(y)\n";
+    cout << "9 - ln(y²)\n";
+    cout << "10 - ln(x*y)\n";
+    cout << "11 - log(x)\n";
+    cout << "12 - log(x²)\n";
+    cout << "13 - log(y)\n";
+    cout << "14 - log(y²)\n";
+    cout << "15 - log(x*y)\n";
+
+    cin >> escolha_x;
+
+    if(escolha_x < 1 || escolha_x >15){
+        cerr << "A escolha deve ser um número inteiro no intervalo [1, 15]" << endl;
+        return 1;
+    }
+
+    cout << endl << "Escolha a variável para regressão no eixo Y:\n";
+    cout << "1 - X\n";
+    cout << "2 - X²\n";
+    cout << "3 - Y\n";
+    cout << "4 - Y²\n";
+    cout << "5 - XY\n";
+    cout << "6 - ln(x)\n";
+    cout << "7 - ln(x²)\n";
+    cout << "8 - ln(y)\n";
+    cout << "9 - ln(y²)\n";
+    cout << "10 - ln(x*y)\n";
+    cout << "11 - log(x)\n";
+    cout << "12 - log(x²)\n";
+    cout << "13 - log(y)\n";
+    cout << "14 - log(y²)\n";
+    cout << "15 - log(x*y)\n";
+
+    cin >> escolha_y;
+
+    if(escolha_y < 1 || escolha_y >15){
+        cerr << "A escolha deve ser um número inteiro no intervalo [1, 15]" << endl;
+        return 1;
+    }
+
+    vector<double> eixoX = gerar_variavel(escolha_x);
+    vector<double> eixoY = gerar_variavel(escolha_y);
+
+
+
     //calculando os somatórios
 
     for(int i=0; i<n; i++){
-        sumX += x[i];
-        sumY += y[i];
-        sumXY += x[i] * y[i];
-        sumX2 += x[i] * x[i];
-        sumY2 += y[i] * y[i];
+        sumX += eixoX[i];
+        sumY += eixoY[i];
+        sumXY += eixoX[i] * eixoY[i];
+        sumX2 += eixoX[i] * eixoX[i];
+        sumY2 += eixoY[i] * eixoY[i];
     }
 
     //Calculando A e B
@@ -138,22 +216,6 @@ int main(){
         cout << "Digite sua escolha: ";
         cin >> tipo_escala;
 
-        cout << endl << "Escolha a variável do eixo X:\n";
-        cout << "1 - X\n";
-        cout << "2 - X²\n";
-        cout << "3 - Y\n";
-        cout << "4 - Y²\n";
-        cout << "5 - XY\n";
-        cin >> escolha_x;
-
-        cout << endl << "Escolha a variável do eixo Y:\n";
-        cout << "1 - X\n";
-        cout << "2 - X²\n";
-        cout << "3 - Y\n";
-        cout << "4 - Y²\n";
-        cout << "5 - XY\n";
-        cin >> escolha_y;
-
         cout << endl << "Quantos pontos o gráfico deve ter? (recomendado 100)" << endl;
         cout << "Obs: com muitos pontos a geração ficará lenta e com poucos o gráfico ficará incompleto" << endl;
         cin >> qtd_pontos;
@@ -166,27 +228,20 @@ int main(){
         //Ajustes dos pontos e eixos baseados nas configurações
 
         if(tipo_escala >= 0 && tipo_escala <= 3){
-            if(escolha_x >= 1 && escolha_x <=5 && escolha_y >= 1 && escolha_y <=5){
-                vector<double> eixoX = gerar_variavel(escolha_x);
-                vector<double> eixoY = gerar_variavel(escolha_y);
-                vector<pair<double, double>> reta;
-                
-                double x_min = *min_element(eixoX.begin(), eixoX.end());
-                double x_max = *max_element(eixoX.begin(), eixoX.end());
+            vector<pair<double, double>> reta;
             
-                double passoX = (qtd_pontos > 1) ? (x_max - x_min) / (qtd_pontos - 1) : 0;
+            double x_min = *min_element(eixoX.begin(), eixoX.end());
+            double x_max = *max_element(eixoX.begin(), eixoX.end());
+        
+            double passoX = (qtd_pontos > 1) ? (x_max - x_min) / (qtd_pontos - 1) : 0;
 
-                for (int i = 0; i < qtd_pontos; i++) {
-                    double xi = x_min + i * passoX;
-                    double yi = A * xi + B; 
-                    reta.push_back(make_pair(xi, yi));
-                }
-                
-                plotar_graficos(reta, eixoX, eixoY, tipo_escala);
-
-            }else{
-                cerr << "Escolha variáveis válidas para o eixo X e Y [1, 5]" << endl;
+            for (int i = 0; i < qtd_pontos; i++) {
+                double xi = x_min + i * passoX;
+                double yi = A * xi + B; 
+                reta.push_back(make_pair(xi, yi));
             }
+            
+            plotar_graficos(reta, eixoX, eixoY, tipo_escala);
         }else{
             cerr << "Digite um tipo de escala válido [0, 3]" << endl;
         }
@@ -201,4 +256,3 @@ int main(){
     cout << "Finalizando o programa" << endl << endl << endl;
     return 0;
 }
-
