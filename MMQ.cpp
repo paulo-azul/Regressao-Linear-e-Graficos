@@ -27,8 +27,8 @@ void plotar_graficos(vector<pair<double, double>> reta, vector<double> x, vector
         gp << "unset logscale\n";
     }
 
-    gp << "plot '-' with points title 'Dados', "
-          "'-' with lines title 'Ajuste Linear'\n";
+    gp << "plot '-' with points pointtype 7 pointsize 1.5 title 'Dados', "
+      "'-' with lines title 'Ajuste Linear'\n";
     gp.send1d(make_pair(x, y));
     gp.send1d(reta);
 
@@ -42,8 +42,8 @@ int main(){
     double entrada, sumX=0, sumY=0, sumXY=0, sumX2=0, sumY2=0, A, B, desvioA, desvioB, erro_padrão_reg;
     int n, decisao_grafico, tipo_escala, escolha_x, escolha_y, qtd_pontos;
 
-    cout << "Calculadora de MMQ" << endl;
-    cout << " Digite a quantidade de dados (N): ";
+    cout << "Calculadora de MMQ" << endl << endl;
+    cout << "Digite a quantidade de dados (N): ";
     cin >> n;
 
     if (n <= 0) {
@@ -147,10 +147,10 @@ int main(){
         cin >> escolha_x;
 
         cout << endl << "Escolha a variável do eixo Y:\n";
-        cout << "1 - Y\n";
-        cout << "2 - Y²\n";
-        cout << "3 - X\n";
-        cout << "4 - X²\n";
+        cout << "1 - X\n";
+        cout << "2 - X²\n";
+        cout << "3 - Y\n";
+        cout << "4 - Y²\n";
         cout << "5 - XY\n";
         cin >> escolha_y;
 
@@ -198,7 +198,7 @@ int main(){
         }
     }
     
-    cout << "Finalizando o programa" << endl;
+    cout << "Finalizando o programa" << endl << endl << endl;
     return 0;
 }
 

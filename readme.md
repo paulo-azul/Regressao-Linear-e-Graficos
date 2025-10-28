@@ -40,4 +40,6 @@ Como Usar o Programa: Execute o programa compilado (./MMQ ou usando ./compilar).
 
 *Importante*: Feche a janela do gráfico para que o programa continue. 
 
+Obs: os pontos desenhados são 1.5x o tamanho padrão e são desenhados como um circulo preenchido. A legenda do gráfico fica no cando superior direito.
+
 Sobre a criação: Foi a primeira vez que usei o Gnuplot e Funções Lambda, favor entrar em contato com qualquer sujestã de melhoria/correção. Tentei começar a comentar o código (iniciar essa prática), então talvez os comentários ainda não sejam adequados (estou me acostumando a fazer)
